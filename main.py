@@ -1,4 +1,4 @@
-import gpiozero
+from gpiozero import Button
 import random
 from signal import pause
 
@@ -17,7 +17,7 @@ class Game():
         self.active_digit -= 1
 
     def right(self):
-        if (self.active_digit == 4):
+        if (self.active_digit == 3):
             self.active_digit = 0
             return
         self.active_digit += 1
@@ -55,12 +55,13 @@ def display_loss():
     print("you lost")
 
 def play():
-    
+
     left = Button(5)
     right = Button(12)
     up = Button(6)
     down = Button(13)
     select = Button(26)
+    turns = 15
 
     #main game loop, still need to add display
     while (turns > 0):
