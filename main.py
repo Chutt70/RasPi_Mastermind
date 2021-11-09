@@ -72,7 +72,7 @@ def play():
     up = Button(6)
     down = Button(13)
     select = Button(26)
-    turns = 2
+    turns = 10
     game = Game()
     game.init_solution()
     won = False
