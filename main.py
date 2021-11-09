@@ -72,21 +72,32 @@ def play():
     up = Button(6)
     down = Button(13)
     select = Button(26)
-    turns = 2
+    turns = 10
     game = Game()
     game.init_solution()
+    to_display = [0,0,0,0]
     won = False
 
     #main game loop, still need to add display
     while (turns > 0):
         #player controls game, ends when select is pressed
+        i = 0
         while (game.in_play):
-            display.show_num(game.guess)
+            if (to_display[game.active_digit] == 10):
+                if(i % 10 == 0):
+                    to_display = game.guess.copy()
+            elif (i % 40 == 0):
+                to_display[game.active_digit] = 10 # digits[10] is off
+
+            display.show_num(to_display)
+
             left.when_pressed = game.left
             right.when_pressed = game.right
             up.when_pressed = game.up
             down.when_pressed = game.down
             select.when_pressed = game.select
+
+            i += 1
         #show which are right
         game.in_play = True
         display_results(game.correct)
@@ -102,4 +113,5 @@ def play():
         display.display_win()
     else:
         display.display_loss()
+    display.clear_all()
     #add ability to play again?
