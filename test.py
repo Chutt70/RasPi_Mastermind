@@ -1,4 +1,5 @@
 from gpiozero import Button
+import RPi.GPIO as GPIO
 
 def goleft():
     print("left")
