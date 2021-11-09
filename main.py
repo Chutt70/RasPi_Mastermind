@@ -1,18 +1,27 @@
 from gpiozero import Button
 import random
 from signal import pause
+import display
 
 
 class Game():
-    solution = [random.randint(0,9), random.randint(0,9), random.randint(0,9), random.randint(0,9)]
+    solution = []
     guess = [0,0,0,0]
     active_digit = 0
     in_play = True
     correct = []
 
+    def init_solution(self):
+        self.solution.append(random.randint(0,9))
+        for i in range(1,4):
+            x = random.randint(0,9)
+            while (x in self.solution):
+                x = random.randint(0,9)
+            self.solution.append(x)
+
     def left(self):
         if (self.active_digit == 0):
-            self.active_digit = 4
+            self.active_digit = 3
             return
         self.active_digit -= 1
 
@@ -36,14 +45,16 @@ class Game():
 
     def select(self):
         self.in_play = False
-        self.correct = []
-        for i in range(0,3):
+        self.correct = [0,0,0,0]
+        found = []
+        for i in range(0,4):
             if (self.guess[i] == self.solution[i]):
-                self.correct.append(2)
-            elif (self.guess[i] in self.solution):
-                self.correct.append(1)
-            else:
-                self.correct.append(0)
+                found.append(self.guess[i])
+                self.correct[i] = 2
+        for i in range(0,4):
+            if (self.guess[i] in self.solution and self.guess[i] not in found):
+                found.append(self.guess[i])
+                self.correct[i] = 1
 
 def display_results(correct):
     print(correct)
@@ -56,20 +67,21 @@ def display_loss():
 
 def play():
 
-    left = Button(5)
-    right = Button(12)
+    left = Button(12)
+    right = Button(5)
     up = Button(6)
     down = Button(13)
     select = Button(26)
-    turns = 15
+    turns = 2
+    game = Game()
+    game.init_solution()
+    won = False
 
     #main game loop, still need to add display
     while (turns > 0):
-        game = Game()
-        won = False
-        turns = 15
-        #player controlls control game, ends when select is pressed
+        #player controls game, ends when select is pressed
         while (game.in_play):
+            display.show_num(game.guess)
             left.when_pressed = game.left
             right.when_pressed = game.right
             up.when_pressed = game.up
@@ -87,7 +99,7 @@ def play():
         turns -= 1
 
     if (won):
-        display_win()
+        display.display_win()
     else:
-        display_loss()
+        display.display_loss()
     #add ability to play again?
