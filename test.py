@@ -1,15 +1,23 @@
-from gpiozero import Button
+from gpiozero import Button, LED
+
+led1 = LED(10)
+led2 = LED(9)
+led3 = LED(8)
+led4 = LED(7)
 
 def goleft():
-    print("left")
+    led1.on()
 def goright():
-    print("right")
+    led2.on()
 def goup():
-    print("up")
+    led3.on()
 def godown():
-    print("down")
+    led4.on()
 def goselect():
-    print("select")
+    led1.off()
+    led2.off()
+    led3.off()
+    led4.off()
 
 left = Button(5)
 right = Button(12)

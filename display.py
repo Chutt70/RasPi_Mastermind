@@ -1,10 +1,13 @@
 import RPi.GPIO as GPIO
+from gpiozero import LED
 from time import sleep
 
 dataPIN = 17 #placeholders
 latchPIN = 27
 clockPIN = 22
 digitPINS = [25,23,24,16]
+
+leds = [LED(9), LED(10), LED(8), LED(7)]
 
 #for 7-seg sending:
 digits = ["11111100", "01100000", "11011010", "11110010", "01100110", "10110110", "10111110", "11100000", "11111110", "11110110", "00000000"]
@@ -42,7 +45,7 @@ def show_num(input):
         sleep(0.005)
 
 def manual_show_num(input):
-    for k in range(350):
+    for k in range(500):
         for i in range(0,4):
             for j in range(0,4):
                 if j != i:
@@ -55,9 +58,17 @@ def clear_all():
     for i in range(0,4):
         shift_update("00000000", dataPIN, clockPIN, latchPIN)
         GPIO.output(digitPINS[i], 1)
+        leds[i].off()
 
 def display_win():
     manual_show_num(["01110110", "10011110", "10110111", "00000000"])
 
 def display_loss():
     manual_show_num(["00011100", "00111010", "10110110", "10011110"])
+
+def update_leds(correct):
+    for i in range(0,4):
+        if correct[i] == 0:
+            leds[i].off()
+        elif correct[i] == 2:
+            leds[i].on()
