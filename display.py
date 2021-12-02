@@ -45,7 +45,7 @@ def show_num(input):
         sleep(0.005)
 
 def manual_show_num(input):
-    for k in range(500):
+    for k in range(350):
         for i in range(0,4):
             for j in range(0,4):
                 if j != i:
@@ -61,10 +61,22 @@ def clear_all():
         leds[i].off()
 
 def display_win():
+    update_leds([1,1,1,1])
     manual_show_num(["01110110", "10011110", "10110111", "00000000"])
 
 def display_loss():
+    update_leds([0,0,0,0])
     manual_show_num(["00011100", "00111010", "10110110", "10011110"])
+
+def display_play():
+    input = ["11001110", "00011100", "11101110", "01110110"]
+    for i in range(0,4):
+            for j in range(0,4):
+                if j != i:
+                    GPIO.output(digitPINS[j], 1)
+            GPIO.output(digitPINS[i], 0)
+            shift_update(input[i], dataPIN, clockPIN, latchPIN)
+            sleep(0.005)
 
 def update_leds(correct):
     for i in range(0,4):

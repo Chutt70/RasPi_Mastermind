@@ -4,20 +4,19 @@ from signal import pause
 import display
 
 
-class Game():
-    solution = []
-    guess = [0,0,0,0]
-    active_digit = 0
-    in_play = True
-    correct = [0,0,0,0]
-
-    def init_solution(self):
+class Game(object):
+    def __init__(self):
+        self.solution = []
         self.solution.append(random.randint(0,9))
         for i in range(1,4):
             x = random.randint(0,9)
             while (x in self.solution):
                 x = random.randint(0,9)
             self.solution.append(x)
+        self.guess = [0,0,0,0]
+        self.active_digit = 0
+        self.in_play = True
+        self.correct = [0,0,0,0]
 
     def left(self):
         if (self.active_digit == 0):
@@ -56,22 +55,21 @@ class Game():
                 found.append(self.guess[i])
                 self.correct[i] = 1
 
-def display_results(correct):
-    print(correct)
+
 
 def play():
+
+    turns = 8
+    game = Game()
+    to_display = [0,0,0,0]
+    led_display = [0,0,0,0]
+    won = False
 
     left = Button(12)
     right = Button(5)
     up = Button(6)
     down = Button(13)
     select = Button(26)
-    turns = 10
-    game = Game()
-    game.init_solution()
-    to_display = [0,0,0,0]
-    led_display = [0,0,0,0]
-    won = False
 
     #main game loop
     while (turns > 0):
@@ -80,7 +78,7 @@ def play():
         while (game.in_play):
             if (to_display[game.active_digit] == 10):
                 if(i % 10 == 0):
-                    to_display = game.guess.copy()
+                    to_display = list(game.guess)
             elif (i % 40 == 0):
                 to_display[game.active_digit] = 10 # digits[10] is off
 
@@ -114,12 +112,24 @@ def play():
             game.in_play = False
             turns = 0
 
-        led_display = game.correct.copy()
+        led_display = list(game.correct)
         turns -= 1
 
     if (won):
         display.display_win()
     else:
         display.display_loss()
+    while (True):
+        display.display_play()
+        if (select.is_pressed):
+            left.close()
+            right.close()
+            up.close()
+            down.close()
+            select.close()
+            play()
+        elif (down.is_pressed):
+            break
     display.clear_all()
-    #add ability to play again?
+
+play()
