@@ -91,6 +91,8 @@ def display_play(): #Shows the word play
             shift_update(input[i], dataPIN, clockPIN, latchPIN)
             sleep(0.005)
 
+# LED function
+
 def update_leds(correct): #sets leds to on or off depending on correct array from main.py
     for i in range(0,4):
         if correct[i] == 0:
